@@ -1,0 +1,87 @@
+#include <cs50.h>
+#include <stdio.h>
+
+int get_length(long n);
+bool checksum(long n);
+
+int main(void)
+{
+    long n = get_long("Number: ");
+
+    // Check if length and checksum are valid first
+    int len = get_length(n);
+    if ((len != 13 && len != 15 && len != 16)  !checksum(n))
+    {
+        printf("INVALID\n");
+        return 0;
+    }
+
+    // Get first two digits
+    long first_digits = n;
+    while (first_digits >= 100)
+    {
+        first_digits = first_digits / 10;
+    }
+
+    int first = first_digits;           // first two digits
+    int first_digit = first_digits / 10;  // first digit only
+
+    // Check card types
+    if (len == 15 && (first == 34  first == 37))
+    {
+        printf("AMEX\n");
+    }
+    else if (len == 16 && first >= 51 && first <= 55)
+    {
+        printf("MASTERCARD\n");
+    }
+    else if ((len == 13 || len == 16) && first_digit == 4)
+    {
+        printf("VISA\n");
+    }
+    else
+    {
+        printf("INVALID\n");
+    }
+
+    return 0;
+}
+
+// Get number length
+int get_length(long n)
+{
+    int len = 0;
+    while (n > 0)
+    {
+        n = n / 10;
+        len++;
+    }
+    return len;
+}
+
+// Check Luhn's Algorithm
+bool checksum(long n)
+{
+    int sum = 0;
+    bool alternate = false;
+
+    while (n > 0)
+    {
+        int digit = n % 10;
+
+        if (alternate)
+        {
+            digit *= 2;
+            if (digit > 9)
+            {
+                digit = (digit % 10) + 1;
+            }
+        }
+
+        sum += digit;
+        alternate = !alternate;
+        n = n / 10;
+    }
+
+    return (sum % 10) == 0;
+}
