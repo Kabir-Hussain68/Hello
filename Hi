@@ -1,87 +1,74 @@
-#include <cs50.h>
-#include <stdio.h>
+import csv
+import sys
 
-int get_length(long n);
-bool checksum(long n);
 
-int main(void)
-{
-    long n = get_long("Number: ");
 
-    // Check if length and checksum are valid first
-    int len = get_length(n);
-    if ((len != 13 && len != 15 && len != 16)  !checksum(n))
-    {
-        printf("INVALID\n");
-        return 0;
-    }
+def main():
 
-    // Get first two digits
-    long first_digits = n;
-    while (first_digits >= 100)
-    {
-        first_digits = first_digits / 10;
-    }
+# TODO: Check for command-line usage
+    if len(sys.argv) != 3:
+        print("Enter proper values")
+        sys.exit(1)
 
-    int first = first_digits;           // first two digits
-    int first_digit = first_digits / 10;  // first digit only
+# TODO: Read database file into a variable
 
-    // Check card types
-    if (len == 15 && (first == 34  first == 37))
-    {
-        printf("AMEX\n");
-    }
-    else if (len == 16 && first >= 51 && first <= 55)
-    {
-        printf("MASTERCARD\n");
-    }
-    else if ((len == 13 || len == 16) && first_digit == 4)
-    {
-        printf("VISA\n");
-    }
-    else
-    {
-        printf("INVALID\n");
-    }
+    database = []
+    file = "f{sys.argv[1]}"
+    with open(sys.argv[1]) as file:
+        dataread = csv.DictReader(file)
+        for row in dataread:
+            database.append(row)
+        print(database)
 
-    return 0;
-}
+# TODO: Read DNA sequence file into a variable
 
-// Get number length
-int get_length(long n)
-{
-    int len = 0;
-    while (n > 0)
-    {
-        n = n / 10;
-        len++;
-    }
-    return len;
-}
+    file = "f{sys.argv[2]}"
+    with open(sys.argv[2]) as file:
+        sequence = file.read()
+        print(sequence, end = "")
 
-// Check Luhn's Algorithm
-bool checksum(long n)
-{
-    int sum = 0;
-    bool alternate = false;
+# TODO: Find longest match of each STR in DNA sequence
 
-    while (n > 0)
-    {
-        int digit = n % 10;
+# TODO: Check database for matching profiles
+        return
 
-        if (alternate)
-        {
-            digit *= 2;
-            if (digit > 9)
-            {
-                digit = (digit % 10) + 1;
-            }
-        }
 
-        sum += digit;
-        alternate = !alternate;
-        n = n / 10;
-    }
+def longest_match(sequence, subsequence):
+    """Returns length of longest run of subsequence in sequence."""
 
-    return (sum % 10) == 0;
-}
+    # Initialize variables
+    longest_run = 0
+    subsequence_length = len(subsequence)
+    sequence_length = len(sequence)
+
+    # Check each character in sequence for most consecutive runs of subsequence
+    for i in range(sequence_length):
+
+        # Initialize count of consecutive runs
+        count = 0
+
+        # Check for a subsequence match in a "substring" (a subset of characters) within sequence
+        # If a match, move substring to next potential match in sequence
+        # Continue moving substring and checking for matches until out of consecutive matches
+        while True:
+
+            # Adjust substring start and end
+            start = i + count * subsequence_length
+            end = start + subsequence_length
+
+            # If there is a match in the substring
+            if sequence[start:end] == subsequence:
+                count += 1
+
+            # If there is no match in the substring
+            else:
+                break
+
+        # Update most consecutive matches found
+        longest_run = max(longest_run, count)
+
+    # After checking for runs at each character in seqeuence, return longest run found
+    return longest_run
+
+
+main()
