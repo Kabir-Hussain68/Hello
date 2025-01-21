@@ -28,6 +28,11 @@ def main():
         print(sequence, end = "")
 
 # TODO: Find longest match of each STR in DNA sequence
+    for i in range(len(STR_list)):
+        for j in STR_list:
+            #print(STR_info[j])
+            if database[i][j] == STR_info[j]:
+                print(database[i]["name"])
 
 # TODO: Check database for matching profiles
         return
